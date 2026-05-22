@@ -123,11 +123,7 @@
   .upload-zone input[type=file] {
     position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
   }
-  .upload-icon {
-    font-size: 28px;
-    margin-bottom: 0.5rem;
-    display: block;
-  }
+  .upload-icon { font-size: 28px; margin-bottom: 0.5rem; display: block; }
   .upload-label {
     font-size: 13px;
     font-weight: bold;
@@ -136,18 +132,8 @@
     font-family: var(--mono);
     letter-spacing: 0.5px;
   }
-  .upload-sub {
-    font-size: 12px;
-    color: var(--muted);
-    font-family: var(--mono);
-  }
-  .upload-status {
-    font-size: 12px;
-    margin-top: 8px;
-    font-family: var(--mono);
-    color: var(--ok);
-    font-weight: bold;
-  }
+  .upload-sub { font-size: 12px; color: var(--muted); font-family: var(--mono); }
+  .upload-status { font-size: 12px; margin-top: 8px; font-family: var(--mono); color: var(--ok); font-weight: bold; }
 
   .run-btn {
     margin-top: 1.5rem;
@@ -184,8 +170,8 @@
     border-top: 3px solid var(--navy);
   }
   .stat-card.danger { border-top-color: var(--danger); }
-  .stat-card.warn { border-top-color: var(--warn); }
-  .stat-card.ok { border-top-color: var(--ok); }
+  .stat-card.warn   { border-top-color: var(--warn); }
+  .stat-card.ok     { border-top-color: var(--ok); }
   .stat-n { font-size: 28px; font-weight: bold; color: var(--text); font-family: var(--mono); }
   .stat-l { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-family: var(--mono); margin-top: 4px; }
 
@@ -202,7 +188,7 @@
   }
   .filter-bar.visible { display: flex; flex-wrap: wrap; }
   .filter-label { font-size: 11px; font-family: var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
-  .filter-bar select, .filter-bar input {
+  .filter-bar select {
     font-family: var(--mono);
     font-size: 12px;
     border: 1px solid var(--border);
@@ -242,10 +228,15 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    cursor: pointer;
-    user-select: none;
   }
-  .buyer-header:hover { background: var(--navy-light); }
+  .buyer-header-click {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+    cursor: pointer;
+  }
+  .buyer-header-click:hover .buyer-name { text-decoration: underline; }
   .buyer-name { font-size: 15px; font-family: var(--mono); letter-spacing: 0.5px; flex: 1; }
   .buyer-count {
     font-size: 11px;
@@ -266,6 +257,25 @@
   .buyer-header.collapsed .chevron { transform: rotate(-90deg); }
   .buyer-body { display: block; }
   .buyer-body.collapsed { display: none; }
+
+  /* ── Email draft button ── */
+  .email-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 5px 13px;
+    background: var(--accent);
+    border: none;
+    color: var(--navy);
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: bold;
+    white-space: nowrap;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  .email-btn:hover { background: var(--accent-light); }
 
   /* ── Action item rows ── */
   .action-table { width: 100%; border-collapse: collapse; }
@@ -300,10 +310,10 @@
     letter-spacing: 1px;
     text-transform: uppercase;
   }
-  .pri-hi { background: #fde8e6; color: var(--danger); }
-  .pri-md { background: #fef3e2; color: var(--warn); }
+  .pri-hi  { background: #fde8e6; color: var(--danger); }
+  .pri-md  { background: #fef3e2; color: var(--warn); }
   .pri-ack { background: #e8f5ee; color: var(--ok); }
-  .pri-lo { background: var(--neutral-bg); color: var(--neutral); }
+  .pri-lo  { background: var(--neutral-bg); color: var(--neutral); }
 
   .status-pill {
     display: inline-block;
@@ -314,33 +324,26 @@
     white-space: nowrap;
   }
   .s-delivered { background: #e8f5ee; color: var(--ok); }
-  .s-partial { background: #fef3e2; color: var(--warn); }
-  .s-notdel { background: #fde8e6; color: var(--danger); }
-  .s-unknown { background: var(--neutral-bg); color: var(--neutral); }
+  .s-partial   { background: #fef3e2; color: var(--warn); }
+  .s-notdel   { background: #fde8e6; color: var(--danger); }
+  .s-unknown  { background: var(--neutral-bg); color: var(--neutral); }
 
-  .action-text {
-    font-size: 12px;
-    line-height: 1.6;
-    color: var(--text);
-  }
+  .action-text { font-size: 12px; line-height: 1.6; color: var(--text); }
   .action-text.urgent { color: var(--danger); font-weight: bold; }
-  .action-text.warn { color: var(--warn); }
+  .action-text.warn   { color: var(--warn); }
 
   .no-po {
     background: repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 4px,
-      rgba(180,180,200,0.06) 4px,
-      rgba(180,180,200,0.06) 8px
+      45deg, transparent, transparent 4px,
+      rgba(180,180,200,0.06) 4px, rgba(180,180,200,0.06) 8px
     );
   }
 
-  .prod-id { font-family: var(--mono); font-size: 12px; color: var(--steel); font-weight: bold; }
+  .prod-id   { font-family: var(--mono); font-size: 12px; color: var(--steel); font-weight: bold; }
   .prod-desc { font-size: 12px; color: var(--text); }
-  .po-num { font-family: var(--mono); font-size: 11px; color: var(--navy); }
-  .po-date { font-family: var(--mono); font-size: 11px; color: var(--muted); }
-  .supplier { font-family: var(--mono); font-size: 11px; }
+  .po-num    { font-family: var(--mono); font-size: 11px; color: var(--navy); }
+  .po-date   { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .supplier  { font-family: var(--mono); font-size: 11px; }
 
   .error-banner {
     background: var(--danger-bg);
@@ -354,7 +357,7 @@
     display: none;
   }
 
-  /* ── Not-in-PO-report section ── */
+  /* ── No-PO section ── */
   .missing-section {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -381,8 +384,184 @@
     flex: 1;
   }
 
+  /* ── Email Modal ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 18, 40, 0.55);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border-radius: 8px;
+    width: 100%;
+    max-width: 740px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    overflow: hidden;
+  }
+  .modal-header {
+    background: var(--navy);
+    color: #fff;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+  }
+  .modal-header h2 {
+    font-size: 14px;
+    font-family: var(--mono);
+    font-weight: normal;
+    letter-spacing: 1px;
+    flex: 1;
+  }
+  .modal-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 4px;
+    opacity: 0.7;
+    line-height: 1;
+  }
+  .modal-close:hover { opacity: 1; }
+  .modal-body { padding: 1.5rem; overflow-y: auto; flex: 1; }
+
+  /* Sender config row */
+  .sender-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .field-group label {
+    display: block;
+    font-size: 10.5px;
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .field-group input {
+    width: 100%;
+    font-family: var(--mono);
+    font-size: 12px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 6px 9px;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .field-group input:focus { outline: 2px solid var(--steel); border-color: var(--steel); }
+
+  /* Subject line */
+  .subject-row { margin-bottom: 1rem; }
+  .subject-row label {
+    display: block;
+    font-size: 10.5px;
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .subject-row input {
+    width: 100%;
+    font-family: var(--mono);
+    font-size: 12px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 6px 9px;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  /* Email body textarea */
+  .body-label {
+    font-size: 10.5px;
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 4px;
+  }
+  #emailBody {
+    width: 100%;
+    min-height: 320px;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.6;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 10px 12px;
+    background: var(--bg);
+    color: var(--text);
+    resize: vertical;
+  }
+  #emailBody:focus { outline: 2px solid var(--steel); border-color: var(--steel); }
+
+  .modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-shrink: 0;
+    background: #f8f9fc;
+  }
+  .modal-footer-sep { flex: 1; }
+  .modal-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 8px 18px;
+    border-radius: 3px;
+    cursor: pointer;
+    border: none;
+    transition: background 0.15s;
+  }
+  .btn-copy {
+    background: var(--steel);
+    color: #fff;
+  }
+  .btn-copy:hover { background: var(--navy); }
+  .btn-mailto {
+    background: var(--accent);
+    color: var(--navy);
+    font-weight: bold;
+  }
+  .btn-mailto:hover { background: var(--accent-light); }
+  .btn-cancel {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .btn-cancel:hover { background: var(--neutral-bg); }
+  .copy-confirm {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--ok);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .copy-confirm.show { opacity: 1; }
+
   @media print {
-    .upload-panel, .filter-bar, .run-btn, .export-btn { display: none !important; }
+    .upload-panel, .filter-bar, .run-btn, .export-btn, .email-btn, .modal-overlay { display: none !important; }
     .buyer-body.collapsed { display: block !important; }
   }
 </style>
@@ -461,10 +640,45 @@
 
 </main>
 
+<!-- Email Modal -->
+<div class="modal-overlay" id="emailModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle">// DRAFT EMAIL — BUYER NAME</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="sender-row">
+        <div class="field-group">
+          <label>From (Your Name)</label>
+          <input type="text" id="senderName" placeholder="e.g. Andy Smith" oninput="savePrefs()">
+        </div>
+        <div class="field-group">
+          <label>From (Your Title)</label>
+          <input type="text" id="senderTitle" placeholder="e.g. Quality Manager" oninput="savePrefs()">
+        </div>
+      </div>
+      <div class="subject-row">
+        <label>Subject</label>
+        <input type="text" id="emailSubject" placeholder="Subject line">
+      </div>
+      <label class="body-label">Email Body — edit as needed before sending</label>
+      <textarea id="emailBody"></textarea>
+    </div>
+    <div class="modal-footer">
+      <span class="copy-confirm" id="copyConfirm">✓ Copied to clipboard</span>
+      <span class="modal-footer-sep"></span>
+      <button class="modal-btn btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-btn btn-copy" onclick="copyEmail()">⎘ Copy Body</button>
+      <button class="modal-btn btn-mailto" onclick="openMailto()">✉ Open in Email</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ─── State ───────────────────────────────────────────────────────────────────
-let excData = null;   // [{acknowledged, productId, description, highPri, medPri}]
-let poData  = null;   // [{productId, poNumber, supplier, description, creationDate, originalDeliveryDate, deliveryStatus, cancelStatus, orderedQty, deliveredQty, confirmedDeliveryDate, buyer, buyerCode, poStatus}]
+let excData = null;
+let poData  = null;
 let analysisResult = null;
 
 // ─── Drag & Drop ─────────────────────────────────────────────────────────────
@@ -476,8 +690,8 @@ let analysisResult = null;
     e.preventDefault(); el.classList.remove('drag-over');
     const file = e.dataTransfer.files[0];
     if (!file) return;
-    if (id === 'excZone') { document.getElementById('excFile').files = e.dataTransfer.files; handleExcFile({files: e.dataTransfer.files}); }
-    else { document.getElementById('poFile').files = e.dataTransfer.files; handlePOFile({files: e.dataTransfer.files}); }
+    if (id === 'excZone') handleExcFile({files: e.dataTransfer.files});
+    else handlePOFile({files: e.dataTransfer.files});
   });
 });
 
@@ -491,17 +705,15 @@ function handleExcFile(input) {
       const wb = XLSX.read(e.target.result, {type:'array'});
       const ws = wb.Sheets[wb.SheetNames[0]];
       const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
-      // Find header row containing "Product ID"
       let hIdx = rows.findIndex(r => r.some(c => String(c).includes('Product ID')));
       if (hIdx < 0) throw new Error('Could not find "Product ID" header row in exceptions file.');
       const headers = rows[hIdx];
-      const ackCol = headers.findIndex(h => String(h).toLowerCase().includes('acknowledged'));
-      const pidCol = headers.findIndex(h => String(h).includes('Product ID'));
+      const ackCol  = headers.findIndex(h => String(h).toLowerCase().includes('acknowledged'));
+      const pidCol  = headers.findIndex(h => String(h).includes('Product ID'));
       const descCol = headers.findIndex(h => String(h).toLowerCase().includes('description'));
-      const hiCol  = headers.findIndex(h => String(h).toLowerCase().includes('high'));
-      const mdCol  = headers.findIndex(h => String(h).toLowerCase().includes('medium'));
-      const grpCol = headers.findIndex(h => String(h).toLowerCase().includes('planning group'));
-
+      const hiCol   = headers.findIndex(h => String(h).toLowerCase().includes('high'));
+      const mdCol   = headers.findIndex(h => String(h).toLowerCase().includes('medium'));
+      const grpCol  = headers.findIndex(h => String(h).toLowerCase().includes('planning group'));
       excData = [];
       for (let i = hIdx+1; i < rows.length; i++) {
         const r = rows[i];
@@ -519,9 +731,7 @@ function handleExcFile(input) {
       document.getElementById('excStatus').textContent = `✓ ${excData.length} exceptions loaded`;
       document.getElementById('excZone').classList.add('loaded');
       checkReady();
-    } catch(err) {
-      showError('Exception file error: ' + err.message);
-    }
+    } catch(err) { showError('Exception file error: ' + err.message); }
   };
   reader.readAsArrayBuffer(file);
 }
@@ -552,13 +762,9 @@ function handlePOFile(input) {
 function parsePOData(rows) {
   if (!rows || rows.length < 2) throw new Error('PO file appears empty.');
   const headers = rows[0].map(h => String(h).trim());
-
-  // Detect format: "Analytical Workbook" style (coded headers) vs "SAP Analytics" style (friendly headers)
   const isAnalytical = headers.includes('LIFE_CYCLE_STCD') || headers.includes('PROD_UUID');
-
   let colMap = {};
   if (isAnalytical) {
-    // Row 1 is a label row — skip it, use coded header names
     colMap = {
       productId:    headers.indexOf('PROD_UUID'),
       poNumber:     headers.indexOf('PURCHASE_ORDER_UUID'),
@@ -573,10 +779,8 @@ function parsePOData(rows) {
       deliveredQty: headers.indexOf('BU_TOTAL_DELIVERED_QUANTITY'),
       confirmDate:  headers.indexOf('CID_DELIVERY_START_DATE'),
       buyerCode:    headers.indexOf('EMPLOYEE_RESPONSIBLE_UUID'),
-      // Buyer name is in the column AFTER EMPLOYEE_RESPONSIBLE_UUID
       buyerName:    headers.indexOf('EMPLOYEE_RESPONSIBLE_UUID') + 1,
     };
-    // Skip the first data row (label row = row index 1)
     poData = [];
     for (let i = 2; i < rows.length; i++) {
       const r = rows[i];
@@ -585,7 +789,6 @@ function parsePOData(rows) {
       poData.push(buildPORow(r, colMap, true));
     }
   } else {
-    // SAP Analytics style — friendly headers directly
     colMap = {
       productId:    headers.findIndex(h => h === 'Product ID'),
       poNumber:     headers.findIndex(h => h.includes('Purchase Order ID') && !h.includes('Item')),
@@ -610,7 +813,6 @@ function parsePOData(rows) {
       poData.push(buildPORow(r, colMap, false));
     }
   }
-
   document.getElementById('poStatus').textContent = `✓ ${poData.length} PO lines loaded`;
   document.getElementById('poZone').classList.add('loaded');
   checkReady();
@@ -618,38 +820,30 @@ function parsePOData(rows) {
 
 function buildPORow(r, c, coded) {
   const get = i => i >= 0 ? String(r[i] || '').trim() : '';
-  const STATUS_MAP = {'5':'Sent','6':'Sent','2':'Sent','7':'In Approval','9':'Finished','10':'Acknowledgement Received','11':'Follow-Up Doc Created'};
-  const DELIV_MAP  = {'1':'Delivered','2':'Not Delivered','3':'Partially Delivered'};
-  const CANCEL_MAP = {'1':'Not Canceled','2':'Canceled'};
-
+  const STATUS_MAP  = {'5':'Sent','6':'Sent','2':'Sent','7':'In Approval','9':'Finished','10':'Acknowledgement Received','11':'Follow-Up Doc Created'};
+  const DELIV_MAP   = {'1':'Delivered','2':'Not Delivered','3':'Partially Delivered'};
+  const CANCEL_MAP  = {'1':'Not Canceled','2':'Canceled'};
   let poStatus     = get(c.poStatus);
   let delivStatus  = get(c.delivStatus);
   let cancelStatus = get(c.cancelStatus);
-
   if (coded) {
     poStatus     = STATUS_MAP[poStatus]     || poStatus;
     delivStatus  = DELIV_MAP[delivStatus]   || delivStatus;
     cancelStatus = CANCEL_MAP[cancelStatus] || cancelStatus;
   }
-
-  const ordQty  = parseFloat(String(r[c.orderedQty]  || '0').replace(/[^\d.]/g,'')) || 0;
-  const delQty  = parseFloat(String(r[c.deliveredQty]|| '0').replace(/[^\d.]/g,'')) || 0;
-  const origDel = get(c.origDelivery);
-  const confirmDel = get(c.confirmDate);
-
+  const ordQty = parseFloat(String(r[c.orderedQty]  || '0').replace(/[^\d.]/g,'')) || 0;
+  const delQty = parseFloat(String(r[c.deliveredQty]|| '0').replace(/[^\d.]/g,'')) || 0;
   return {
     productId:    get(c.productId).replace(/\.0$/,''),
     poNumber:     get(c.poNumber).replace(/\.0$/,''),
     supplier:     get(c.supplier).replace(/\.0$/,''),
     description:  get(c.description),
     creationDate: get(c.creationDate),
-    origDelivery: origDel,
-    delivStatus,
-    cancelStatus,
-    poStatus,
+    origDelivery: get(c.origDelivery),
+    delivStatus, cancelStatus, poStatus,
     orderedQty:   ordQty,
     deliveredQty: delQty,
-    confirmDate:  confirmDel,
+    confirmDate:  get(c.confirmDate),
     buyer:        get(c.buyerName),
     buyerCode:    c.buyerCode >= 0 ? get(c.buyerCode) : '',
   };
@@ -662,10 +856,7 @@ function checkReady() {
 // ─── Analysis ─────────────────────────────────────────────────────────────────
 function runAnalysis() {
   hideError();
-  const today = new Date();
-  today.setHours(0,0,0,0);
-
-  // Index PO data by product ID
+  const today = new Date(); today.setHours(0,0,0,0);
   const poByProduct = {};
   poData.forEach(row => {
     if (!poByProduct[row.productId]) poByProduct[row.productId] = [];
@@ -673,190 +864,133 @@ function runAnalysis() {
   });
 
   const items = excData.map(exc => {
-    const poRows = poByProduct[exc.productId] || [];
+    const poRows   = poByProduct[exc.productId] || [];
     const priority = exc.highPri ? 'HIGH' : exc.medPri ? 'MEDIUM' : 'ACK';
-
     if (poRows.length === 0) {
-      return { exc, poRows: [], priority, buyer: 'No PO Found', buyerCode: '', urgency: exc.highPri ? 3 : exc.medPri ? 2 : 1, action: buildAction(exc, [], today), isNoPO: true };
+      return { exc, poRows:[], priority, buyer:'No PO Found', buyerCode:'', urgency: exc.highPri?3:exc.medPri?2:1, action: buildAction(exc,[],today), isNoPO:true };
     }
-
-    // Determine buyer from PO rows (most common non-empty)
-    const buyers = poRows.map(r => r.buyer).filter(Boolean);
+    const buyers = poRows.map(r=>r.buyer).filter(Boolean);
     const buyerCounts = {};
-    buyers.forEach(b => buyerCounts[b] = (buyerCounts[b]||0)+1);
-    const buyer = Object.entries(buyerCounts).sort((a,b)=>b[1]-a[1])[0]?.[0] || 'Unknown';
-    const buyerCode = poRows.find(r => r.buyer === buyer)?.buyerCode || '';
-
-    const action = buildAction(exc, poRows, today);
-    const urgency = action.urgent ? 4 : exc.highPri ? 3 : exc.medPri ? 2 : 1;
-
-    return { exc, poRows, priority, buyer, buyerCode, urgency, action, isNoPO: false };
+    buyers.forEach(b => buyerCounts[b]=(buyerCounts[b]||0)+1);
+    const buyer     = Object.entries(buyerCounts).sort((a,b)=>b[1]-a[1])[0]?.[0] || 'Unknown';
+    const buyerCode = poRows.find(r=>r.buyer===buyer)?.buyerCode || '';
+    const action    = buildAction(exc, poRows, today);
+    const urgency   = action.urgent ? 4 : exc.highPri ? 3 : exc.medPri ? 2 : 1;
+    return { exc, poRows, priority, buyer, buyerCode, urgency, action, isNoPO:false };
   });
 
   analysisResult = items;
 
-  // Build buyer list for filter
   const buyers = [...new Set(items.filter(i=>!i.isNoPO).map(i=>i.buyer))].sort();
   const buyerSel = document.getElementById('filterBuyer');
   buyerSel.innerHTML = '<option value="">All Buyers</option>';
-  buyers.forEach(b => { const o = document.createElement('option'); o.value = b; o.textContent = b; buyerSel.appendChild(o); });
+  buyers.forEach(b => { const o=document.createElement('option'); o.value=b; o.textContent=b; buyerSel.appendChild(o); });
 
-  // Stats
-  const urgent = items.filter(i => i.action.urgent).length;
-  const highOpen = items.filter(i => i.exc.highPri && !i.isNoPO && i.poRows.some(r => r.delivStatus !== 'Delivered')).length;
-  const noPO = items.filter(i => i.isNoPO).length;
-  const uniqueBuyers = buyers.length;
-
-  document.getElementById('s-urgent').textContent = urgent;
-  document.getElementById('s-high').textContent = highOpen;
-  document.getElementById('s-nopo').textContent = noPO;
-  document.getElementById('s-buyers').textContent = uniqueBuyers;
+  document.getElementById('s-urgent').textContent = items.filter(i=>i.action.urgent).length;
+  document.getElementById('s-high').textContent   = items.filter(i=>i.exc.highPri && !i.isNoPO && i.poRows.some(r=>r.delivStatus!=='Delivered')).length;
+  document.getElementById('s-nopo').textContent   = items.filter(i=>i.isNoPO).length;
+  document.getElementById('s-buyers').textContent = buyers.length;
 
   document.getElementById('summaryStrip').classList.add('visible');
   document.getElementById('filterBar').classList.add('visible');
-
   renderResults(items);
 }
 
+// ─── Date helpers ─────────────────────────────────────────────────────────────
 function parseDate(str) {
-  if (!str || str === '00/00/0000' || str === '#' || str.trim() === '') return null;
-  const d = new Date(str);
-  return isNaN(d.getTime()) ? null : d;
+  if (!str || str==='00/00/0000' || str==='#' || str.trim()==='') return null;
+  const d = new Date(str); return isNaN(d.getTime()) ? null : d;
 }
+function isPastDue(ds, today) { const d=parseDate(ds); if(!d)return false; d.setHours(0,0,0,0); return d<today; }
+function isDueToday(ds, today) { const d=parseDate(ds); if(!d)return false; d.setHours(0,0,0,0); return d.getTime()===today.getTime(); }
+function dueSoon(ds, today, days=7) { const d=parseDate(ds); if(!d)return false; d.setHours(0,0,0,0); const diff=(d-today)/86400000; return diff>=0&&diff<=days; }
 
-function isPastDue(dateStr, today) {
-  const d = parseDate(dateStr);
-  if (!d) return false;
-  d.setHours(0,0,0,0);
-  return d < today;
-}
-
-function isDueToday(dateStr, today) {
-  const d = parseDate(dateStr);
-  if (!d) return false;
-  d.setHours(0,0,0,0);
-  return d.getTime() === today.getTime();
-}
-
-function dueSoon(dateStr, today, days=7) {
-  const d = parseDate(dateStr);
-  if (!d) return false;
-  d.setHours(0,0,0,0);
-  const diff = (d - today) / 86400000;
-  return diff >= 0 && diff <= days;
-}
-
+// ─── Action builder ───────────────────────────────────────────────────────────
 function buildAction(exc, poRows, today) {
-  let urgent = false;
-  let lines = [];
-
-  if (poRows.length === 0) {
-    if (exc.description.includes('*DSC*')) {
+  let urgent=false, lines=[];
+  if (poRows.length===0) {
+    if (exc.description.includes('*DSC*'))
       lines.push('Discontinued item — no PO expected. Confirm on-hand stock covers any remaining demand; close exception if satisfied.');
-    } else if (exc.description.includes('*SPC*')) {
-      urgent = true;
-      lines.push('URGENT: Special item with no PO found. Escalate to buyer immediately — SPC forgings/parts carry extreme lead times. Initiate procurement without delay.');
+    else if (exc.description.includes('*SPC*')) {
+      urgent=true;
+      lines.push('URGENT: Special item with no PO found. Escalate to buyer immediately — SPC parts carry extreme lead times. Initiate procurement without delay.');
     } else {
-      if (exc.highPri) urgent = true;
+      if (exc.highPri) urgent=true;
       lines.push('No PO found in PO report. Verify in SAP whether a PO exists under a different report scope or project/WO-based PO. If no supply action has been taken, raise a purchase requisition immediately.');
     }
-    return { text: lines.join(' '), urgent };
+    return {text:lines.join(' '),urgent};
   }
+  const delivered    = poRows.filter(r=>r.deliveredQty>0);
+  const notDelivered = poRows.filter(r=>r.deliveredQty===0 && r.cancelStatus!=='Canceled');
+  const pastDue      = notDelivered.filter(r=>isPastDue(r.origDelivery,today));
+  const dueToday     = notDelivered.filter(r=>isDueToday(r.origDelivery,today));
+  const dueSoonRows  = notDelivered.filter(r=>dueSoon(r.origDelivery,today,7)&&!isDueToday(r.origDelivery,today));
+  const inApproval   = notDelivered.filter(r=>r.poStatus==='In Approval');
+  const longLead     = notDelivered.filter(r=>{ const d=parseDate(r.origDelivery); return d&&(d-today)/86400000>60; });
 
-  const delivered = poRows.filter(r => r.deliveredQty > 0);
-  const notDelivered = poRows.filter(r => r.deliveredQty === 0 && r.cancelStatus !== 'Canceled');
-  const pastDue = notDelivered.filter(r => isPastDue(r.origDelivery, today));
-  const dueToday = notDelivered.filter(r => isDueToday(r.origDelivery, today));
-  const dueSoonRows = notDelivered.filter(r => dueSoon(r.origDelivery, today, 7) && !isDueToday(r.origDelivery, today));
-  const inApproval = notDelivered.filter(r => r.poStatus === 'In Approval');
-  const longLead = notDelivered.filter(r => { const d = parseDate(r.origDelivery); if (!d) return false; return (d - today) / 86400000 > 60; });
-
-  if (pastDue.length > 0) {
-    urgent = true;
-    const pos = pastDue.map(r=>`PO ${r.poNumber}`).join(', ');
-    lines.push(`PAST DUE: ${pos} — contact supplier immediately for status and revised delivery date.`);
+  if (pastDue.length>0) {
+    urgent=true;
+    lines.push(`PAST DUE: ${pastDue.map(r=>`PO ${r.poNumber}`).join(', ')} — contact supplier immediately for status and revised delivery date.`);
   }
-  if (dueToday.length > 0) {
-    urgent = true;
-    const pos = dueToday.map(r=>`PO ${r.poNumber}`).join(', ');
-    lines.push(`DUE TODAY: Confirm shipment/delivery for ${pos} and post goods receipt upon arrival.`);
+  if (dueToday.length>0) {
+    urgent=true;
+    lines.push(`DUE TODAY: Confirm shipment/delivery for ${dueToday.map(r=>`PO ${r.poNumber}`).join(', ')} and post goods receipt upon arrival.`);
   }
-  if (inApproval.length > 0 && (pastDue.length > 0 || dueToday.length > 0)) {
-    urgent = true;
-    const pos = inApproval.map(r=>`PO ${r.poNumber}`).join(', ');
-    lines.push(`${pos} is still "In Approval" — confirm PO has been released to supplier.`);
-  } else if (inApproval.length > 0) {
-    const pos = inApproval.map(r=>`PO ${r.poNumber}`).join(', ');
-    lines.push(`${pos} is still "In Approval" — confirm PO has been released to supplier before delivery date.`);
+  if (inApproval.length>0 && (pastDue.length>0||dueToday.length>0)) {
+    urgent=true;
+    lines.push(`${inApproval.map(r=>`PO ${r.poNumber}`).join(', ')} is still "In Approval" — confirm PO has been released to supplier.`);
+  } else if (inApproval.length>0) {
+    lines.push(`${inApproval.map(r=>`PO ${r.poNumber}`).join(', ')} is still "In Approval" — confirm PO has been released to supplier before delivery date.`);
   }
-  if (delivered.length > 0 && notDelivered.length === 0) {
+  if (delivered.length>0 && notDelivered.length===0)
     lines.push('All ordered quantity has been received. Verify goods receipt is posted in SAP, confirm on-hand stock meets demand, then acknowledge and close this exception.');
-  } else if (delivered.length > 0) {
-    const total = delivered.reduce((s,r)=>s+r.deliveredQty,0);
-    lines.push(`Partial delivery on file (${fmt(total)} received). Confirm GR is posted. ${notDelivered.length} PO line(s) remain open.`);
-  }
-  if (dueSoonRows.length > 0) {
-    const pos = dueSoonRows.map(r=>`PO ${r.poNumber} (due ${r.origDelivery})`).join('; ');
-    lines.push(`Delivery due within the week — monitor closely: ${pos}.`);
-  }
-  if (longLead.length > 0 && pastDue.length === 0 && dueToday.length === 0) {
-    const pos = longLead.map(r=>`PO ${r.poNumber} (due ${r.origDelivery})`).join('; ');
-    lines.push(`Long lead time item(s): ${pos}. Verify production schedule can absorb the delivery timeline; escalate to supplier if needed.`);
-  }
-  if (exc.acknowledged && lines.length === 0) {
+  else if (delivered.length>0)
+    lines.push(`Partial delivery on file (${fmt(delivered.reduce((s,r)=>s+r.deliveredQty,0))} received). Confirm GR is posted. ${notDelivered.length} PO line(s) remain open.`);
+  if (dueSoonRows.length>0)
+    lines.push(`Delivery due within the week — monitor closely: ${dueSoonRows.map(r=>`PO ${r.poNumber} (due ${r.origDelivery})`).join('; ')}.`);
+  if (longLead.length>0 && pastDue.length===0 && dueToday.length===0)
+    lines.push(`Long lead time item(s): ${longLead.map(r=>`PO ${r.poNumber} (due ${r.origDelivery})`).join('; ')}. Verify production schedule can absorb the delivery timeline; escalate to supplier if needed.`);
+  if (exc.acknowledged && lines.length===0)
     lines.push('Exception acknowledged. PO is in progress — monitor for on-time delivery and post GR upon receipt.');
-  }
-  if (lines.length === 0) {
+  if (lines.length===0)
     lines.push('PO is open and in progress. Verify delivery timeline aligns with production schedule; acknowledge exception once material is received.');
-  }
 
-  return { text: lines.join(' '), urgent };
+  return {text:lines.join(' '),urgent};
 }
 
-function fmt(n) {
-  return Number.isInteger(n) ? String(n) : n.toFixed(2).replace(/\.?0+$/,'');
-}
+function fmt(n) { return Number.isInteger(n)?String(n):n.toFixed(2).replace(/\.?0+$/,''); }
 
 // ─── Render ───────────────────────────────────────────────────────────────────
 function renderResults(items) {
-  const priority = document.getElementById('filterPriority').value;
-  const buyerFilter = document.getElementById('filterBuyer').value;
+  const priority     = document.getElementById('filterPriority').value;
+  const buyerFilter  = document.getElementById('filterBuyer').value;
   const statusFilter = document.getElementById('filterStatus').value;
 
   let filtered = items.filter(item => {
-    if (priority === 'HIGH'   && !item.exc.highPri) return false;
-    if (priority === 'MEDIUM' && !item.exc.medPri)  return false;
-    if (priority === 'ACK'    && (!item.exc.acknowledged && item.exc.highPri || !item.exc.acknowledged && item.exc.medPri || !item.exc.acknowledged)) return false;
-    if (buyerFilter && item.buyer !== buyerFilter) return false;
-    if (statusFilter === 'urgent'       && !item.action.urgent) return false;
-    if (statusFilter === 'nopo'         && !item.isNoPO) return false;
-    if (statusFilter === 'notdelivered' && (item.isNoPO || !item.poRows.some(r=>r.delivStatus === 'Not Delivered' || r.delivStatus === 'Partially Delivered'))) return false;
-    if (statusFilter === 'delivered'    && (item.isNoPO || !item.poRows.some(r=>r.deliveredQty>0))) return false;
+    if (priority==='HIGH'   && !item.exc.highPri) return false;
+    if (priority==='MEDIUM' && !item.exc.medPri)  return false;
+    if (priority==='ACK'    && (item.exc.highPri||item.exc.medPri||!item.exc.acknowledged)) return false;
+    if (buyerFilter && item.buyer!==buyerFilter) return false;
+    if (statusFilter==='urgent'       && !item.action.urgent) return false;
+    if (statusFilter==='nopo'         && !item.isNoPO) return false;
+    if (statusFilter==='notdelivered' && (item.isNoPO||!item.poRows.some(r=>r.delivStatus==='Not Delivered'||r.delivStatus==='Partially Delivered'))) return false;
+    if (statusFilter==='delivered'    && (item.isNoPO||!item.poRows.some(r=>r.deliveredQty>0))) return false;
     return true;
   });
 
-  // Separate no-PO items
-  const noPOItems = filtered.filter(i => i.isNoPO).sort((a,b) => b.urgency - a.urgency);
-  const poItems   = filtered.filter(i => !i.isNoPO);
-
-  // Group by buyer
-  const byBuyer = {};
-  poItems.forEach(item => {
-    if (!byBuyer[item.buyer]) byBuyer[item.buyer] = [];
-    byBuyer[item.buyer].push(item);
-  });
-  // Sort buyers: urgent first, then alphabetical
-  const sortedBuyers = Object.entries(byBuyer).sort((a,b) => {
-    const aUrgent = a[1].some(i=>i.action.urgent) ? 1 : 0;
-    const bUrgent = b[1].some(i=>i.action.urgent) ? 1 : 0;
-    if (bUrgent !== aUrgent) return bUrgent - aUrgent;
-    return a[0].localeCompare(b[0]);
+  const noPOItems    = filtered.filter(i=>i.isNoPO).sort((a,b)=>b.urgency-a.urgency);
+  const poItems      = filtered.filter(i=>!i.isNoPO);
+  const byBuyer      = {};
+  poItems.forEach(item => { if(!byBuyer[item.buyer])byBuyer[item.buyer]=[]; byBuyer[item.buyer].push(item); });
+  const sortedBuyers = Object.entries(byBuyer).sort((a,b)=>{
+    const au=a[1].some(i=>i.action.urgent)?1:0, bu=b[1].some(i=>i.action.urgent)?1:0;
+    return bu!==au ? bu-au : a[0].localeCompare(b[0]);
   });
 
   let html = '';
 
-  // No-PO section first
-  if (noPOItems.length > 0) {
+  // No-PO section
+  if (noPOItems.length>0) {
     html += `<div class="missing-section">
       <div class="missing-header" onclick="toggleSection(this)">
         <h3>⚠ No PO Found in Report (${noPOItems.length} items)</h3>
@@ -865,19 +999,16 @@ function renderResults(items) {
       <div class="buyer-body">
         <table class="action-table">
           <thead><tr>
-            <th style="width:100px">Product ID</th>
-            <th>Description</th>
-            <th style="width:75px">Priority</th>
-            <th style="width:65px">Ack'd</th>
+            <th style="width:100px">Product ID</th><th>Description</th>
+            <th style="width:75px">Priority</th><th style="width:65px">Ack'd</th>
             <th>Action Required</th>
-          </tr></thead>
-          <tbody>`;
+          </tr></thead><tbody>`;
     noPOItems.forEach(item => {
       html += `<tr class="no-po">
         <td><span class="prod-id">${item.exc.productId}</span></td>
         <td><span class="prod-desc">${esc(item.exc.description)}</span></td>
         <td>${priBadge(item.priority)}</td>
-        <td style="text-align:center">${item.exc.acknowledged ? '✓' : '—'}</td>
+        <td style="text-align:center">${item.exc.acknowledged?'✓':'—'}</td>
         <td><span class="action-text ${item.action.urgent?'urgent':''}">${esc(item.action.text)}</span></td>
       </tr>`;
     });
@@ -887,16 +1018,20 @@ function renderResults(items) {
   // Buyer sections
   sortedBuyers.forEach(([buyer, buyerItems]) => {
     const urgentCount = buyerItems.filter(i=>i.action.urgent).length;
-    buyerItems.sort((a,b) => b.urgency - a.urgency);
+    buyerItems.sort((a,b)=>b.urgency-a.urgency);
+    const buyerKey = encodeURIComponent(buyer);
 
     html += `<div class="buyer-section">
-      <div class="buyer-header" onclick="toggleSection(this)">
-        <span class="buyer-name">${esc(buyer)}</span>
-        <span class="buyer-count">${buyerItems.length} item${buyerItems.length!==1?'s':''}</span>
-        ${urgentCount>0?`<span class="buyer-urgent">⚠ ${urgentCount} urgent</span>`:''}
-        <span class="chevron">▼</span>
+      <div class="buyer-header" id="bh-${buyerKey}">
+        <div class="buyer-header-click" onclick="toggleBuyerSection('${buyerKey}')">
+          <span class="buyer-name">${esc(buyer)}</span>
+          <span class="buyer-count">${buyerItems.length} item${buyerItems.length!==1?'s':''}</span>
+          ${urgentCount>0?`<span class="buyer-urgent">⚠ ${urgentCount} urgent</span>`:''}
+          <span class="chevron">▼</span>
+        </div>
+        <button class="email-btn" onclick="openEmailModal('${buyerKey}')">✉ Draft Email</button>
       </div>
-      <div class="buyer-body">
+      <div class="buyer-body" id="bb-${buyerKey}">
         <table class="action-table">
           <thead><tr>
             <th style="width:100px">Product ID</th>
@@ -907,18 +1042,15 @@ function renderResults(items) {
             <th style="width:95px">Due Date</th>
             <th style="width:110px">Delivery Status</th>
             <th>Action Required</th>
-          </tr></thead>
-          <tbody>`;
+          </tr></thead><tbody>`;
 
     buyerItems.forEach(item => {
-      const poNumbers = [...new Set(item.poRows.map(r=>r.poNumber))].slice(0,3).join(', ') + (item.poRows.length>3?'…':'');
-      const suppliers = [...new Set(item.poRows.map(r=>r.supplier))].slice(0,2).join(', ');
-      const dueDates  = [...new Set(item.poRows.map(r=>r.origDelivery).filter(d=>d&&d!=='00/00/0000'&&d!=='#'))].slice(0,2).join('; ');
-      const delivStatuses = [...new Set(item.poRows.map(r=>r.delivStatus))];
-      const hasDelivered  = item.poRows.some(r=>r.deliveredQty>0);
-      const allDelivered  = item.poRows.every(r=>r.deliveredQty>0);
-      const mainStatus = allDelivered ? 'Delivered' : hasDelivered ? 'Partially Delivered' : (delivStatuses[0]||'');
-
+      const poNumbers  = [...new Set(item.poRows.map(r=>r.poNumber))].slice(0,3).join(', ')+(item.poRows.length>3?'…':'');
+      const suppliers  = [...new Set(item.poRows.map(r=>r.supplier))].slice(0,2).join(', ');
+      const dueDates   = [...new Set(item.poRows.map(r=>r.origDelivery).filter(d=>d&&d!=='00/00/0000'&&d!=='#'))].slice(0,2).join('; ');
+      const hasDeliv   = item.poRows.some(r=>r.deliveredQty>0);
+      const allDeliv   = item.poRows.every(r=>r.deliveredQty>0);
+      const mainStatus = allDeliv?'Delivered':hasDeliv?'Partially Delivered':(item.poRows[0]?.delivStatus||'');
       html += `<tr>
         <td><span class="prod-id">${item.exc.productId}</span></td>
         <td><span class="prod-desc">${esc(item.exc.description)}</span></td>
@@ -930,73 +1062,193 @@ function renderResults(items) {
         <td><span class="action-text ${item.action.urgent?'urgent':item.exc.highPri?'warn':''}">${esc(item.action.text)}</span></td>
       </tr>`;
     });
-
     html += `</tbody></table></div></div>`;
   });
 
-  if (html === '') html = '<p style="text-align:center;color:var(--muted);font-family:var(--mono);padding:3rem">No results match the current filters.</p>';
+  if (html==='') html='<p style="text-align:center;color:var(--muted);font-family:var(--mono);padding:3rem">No results match the current filters.</p>';
   document.getElementById('results').innerHTML = html;
 }
 
 function applyFilters() { if (analysisResult) renderResults(analysisResult); }
 
+function toggleBuyerSection(key) {
+  const header = document.getElementById('bh-'+key);
+  const body   = document.getElementById('bb-'+key);
+  header.classList.toggle('collapsed');
+  body.classList.toggle('collapsed');
+}
 function toggleSection(header) {
   header.classList.toggle('collapsed');
-  const body = header.nextElementSibling;
-  body.classList.toggle('collapsed');
+  header.nextElementSibling.classList.toggle('collapsed');
 }
 
 function priBadge(pri) {
-  const map = { HIGH:'hi', MEDIUM:'md', ACK:'ack' };
+  const map={HIGH:'hi',MEDIUM:'md',ACK:'ack'};
   return `<span class="pri-badge pri-${map[pri]||'lo'}">${pri}</span>`;
 }
-
 function delivBadge(status) {
-  const map = { 'Delivered':'delivered', 'Partially Delivered':'partial', 'Not Delivered':'notdel' };
-  const cls = map[status] || 'unknown';
-  return `<span class="status-pill s-${cls}">${status||'—'}</span>`;
+  const map={'Delivered':'delivered','Partially Delivered':'partial','Not Delivered':'notdel'};
+  return `<span class="status-pill s-${map[status]||'unknown'}">${status||'—'}</span>`;
+}
+function esc(str) { return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ─── Email Modal ──────────────────────────────────────────────────────────────
+let currentBuyerKey = null;
+
+function loadPrefs() {
+  document.getElementById('senderName').value  = localStorage.getItem('dwe_senderName')  || '';
+  document.getElementById('senderTitle').value = localStorage.getItem('dwe_senderTitle') || '';
+}
+function savePrefs() {
+  localStorage.setItem('dwe_senderName',  document.getElementById('senderName').value);
+  localStorage.setItem('dwe_senderTitle', document.getElementById('senderTitle').value);
+  // Regenerate body live as sender name/title changes
+  if (currentBuyerKey) regenerateBody();
 }
 
-function esc(str) {
-  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function openEmailModal(buyerKey) {
+  currentBuyerKey = buyerKey;
+  loadPrefs();
+  const buyer  = decodeURIComponent(buyerKey);
+  const items  = analysisResult.filter(i=>!i.isNoPO && encodeURIComponent(i.buyer)===buyerKey);
+  document.getElementById('modalTitle').textContent = `// DRAFT EMAIL — ${buyer.toUpperCase()}`;
+  const today  = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const urgent = items.filter(i=>i.action.urgent).length;
+  const subj   = urgent > 0
+    ? `URGENT: Exception Report Action Items Requiring Immediate Attention — ${today}`
+    : `Exception Report Action Items — ${today}`;
+  document.getElementById('emailSubject').value = subj;
+  regenerateBody();
+  document.getElementById('emailModal').classList.add('open');
 }
 
-function showError(msg) {
-  const el = document.getElementById('errorBanner');
-  el.textContent = '⚠ ' + msg;
-  el.style.display = 'block';
+function regenerateBody() {
+  if (!currentBuyerKey) return;
+  const buyer      = decodeURIComponent(currentBuyerKey);
+  const items      = analysisResult.filter(i=>!i.isNoPO && encodeURIComponent(i.buyer)===currentBuyerKey);
+  const senderName = document.getElementById('senderName').value.trim() || '[Your Name]';
+  const senderTitle= document.getElementById('senderTitle').value.trim() || '[Your Title]';
+  const today      = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const urgent     = items.filter(i=>i.action.urgent);
+  const high       = items.filter(i=>!i.action.urgent && i.exc.highPri);
+  const other      = items.filter(i=>!i.action.urgent && !i.exc.highPri);
+
+  const firstName = buyer.split(' ')[0];
+  let body = '';
+  body += `${firstName},\n\n`;
+
+  if (urgent.length > 0) {
+    body += `The following exception report items require your immediate attention as of ${today}. `;
+    body += `Please review and take action on the items below at your earliest opportunity.\n\n`;
+  } else {
+    body += `Please see below for your current exception report action items as of ${today}. `;
+    body += `Review each item and take the appropriate action.\n\n`;
+  }
+
+  if (urgent.length > 0) {
+    body += `${'─'.repeat(60)}\n`;
+    body += `URGENT / PAST DUE ITEMS (${urgent.length})\n`;
+    body += `${'─'.repeat(60)}\n\n`;
+    urgent.forEach(item => {
+      const pos = [...new Set(item.poRows.map(r=>r.poNumber))].join(', ');
+      const sup = [...new Set(item.poRows.map(r=>r.supplier))].join(', ');
+      const due = [...new Set(item.poRows.map(r=>r.origDelivery).filter(d=>d&&d!=='00/00/0000'&&d!=='#'))].join('; ');
+      body += `Product:     ${item.exc.productId} — ${item.exc.description}\n`;
+      body += `PO Number:   ${pos || 'N/A'}\n`;
+      body += `Supplier:    ${sup || 'N/A'}\n`;
+      body += `Due Date:    ${due || 'N/A'}\n`;
+      body += `Action:      ${item.action.text}\n\n`;
+    });
+  }
+
+  if (high.length > 0) {
+    body += `${'─'.repeat(60)}\n`;
+    body += `HIGH PRIORITY ITEMS (${high.length})\n`;
+    body += `${'─'.repeat(60)}\n\n`;
+    high.forEach(item => {
+      const pos = [...new Set(item.poRows.map(r=>r.poNumber))].join(', ');
+      const sup = [...new Set(item.poRows.map(r=>r.supplier))].join(', ');
+      const due = [...new Set(item.poRows.map(r=>r.origDelivery).filter(d=>d&&d!=='00/00/0000'&&d!=='#'))].join('; ');
+      body += `Product:     ${item.exc.productId} — ${item.exc.description}\n`;
+      body += `PO Number:   ${pos || 'N/A'}\n`;
+      body += `Supplier:    ${sup || 'N/A'}\n`;
+      body += `Due Date:    ${due || 'N/A'}\n`;
+      body += `Action:      ${item.action.text}\n\n`;
+    });
+  }
+
+  if (other.length > 0) {
+    body += `${'─'.repeat(60)}\n`;
+    body += `OTHER ITEMS (${other.length})\n`;
+    body += `${'─'.repeat(60)}\n\n`;
+    other.forEach(item => {
+      const pos = [...new Set(item.poRows.map(r=>r.poNumber))].join(', ');
+      const sup = [...new Set(item.poRows.map(r=>r.supplier))].join(', ');
+      const due = [...new Set(item.poRows.map(r=>r.origDelivery).filter(d=>d&&d!=='00/00/0000'&&d!=='#'))].join('; ');
+      body += `Product:     ${item.exc.productId} — ${item.exc.description}\n`;
+      body += `PO Number:   ${pos || 'N/A'}\n`;
+      body += `Supplier:    ${sup || 'N/A'}\n`;
+      body += `Due Date:    ${due || 'N/A'}\n`;
+      body += `Action:      ${item.action.text}\n\n`;
+    });
+  }
+
+  body += `Please confirm receipt of this email and advise on the status of any past-due or urgent items by end of business today.\n\n`;
+  body += `Thank you,\n`;
+  body += `${senderName}\n`;
+  if (senderTitle) body += `${senderTitle}\n`;
+  body += `Downing Wellhead Equipment, Inc.`;
+
+  document.getElementById('emailBody').value = body;
 }
-function hideError() {
-  document.getElementById('errorBanner').style.display = 'none';
+
+function closeModal() {
+  document.getElementById('emailModal').classList.remove('open');
+  currentBuyerKey = null;
 }
+
+function copyEmail() {
+  const body = document.getElementById('emailBody').value;
+  navigator.clipboard.writeText(body).then(() => {
+    const el = document.getElementById('copyConfirm');
+    el.classList.add('show');
+    setTimeout(()=>el.classList.remove('show'), 2500);
+  });
+}
+
+function openMailto() {
+  const subj = encodeURIComponent(document.getElementById('emailSubject').value);
+  const body = encodeURIComponent(document.getElementById('emailBody').value);
+  window.location.href = `mailto:?subject=${subj}&body=${body}`;
+}
+
+// Close modal on overlay click
+document.getElementById('emailModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
 
 // ─── Export CSV ───────────────────────────────────────────────────────────────
 function exportCSV() {
   if (!analysisResult) return;
   const rows = [['Product ID','Description','Priority','Acknowledged','Buyer','PO Number(s)','Supplier(s)','Due Date(s)','Delivery Status','Action Required','Urgent']];
   analysisResult.forEach(item => {
-    const poNumbers = item.isNoPO ? '' : [...new Set(item.poRows.map(r=>r.poNumber))].join('; ');
-    const suppliers = item.isNoPO ? '' : [...new Set(item.poRows.map(r=>r.supplier))].join('; ');
-    const dueDates  = item.isNoPO ? '' : [...new Set(item.poRows.map(r=>r.origDelivery).filter(d=>d&&d!=='00/00/0000'&&d!=='#'))].join('; ');
-    const status    = item.isNoPO ? 'No PO Found' : (item.poRows.every(r=>r.deliveredQty>0)?'Delivered':item.poRows.some(r=>r.deliveredQty>0)?'Partially Delivered':'Not Delivered');
-    rows.push([
-      item.exc.productId,
-      item.exc.description,
-      item.priority,
-      item.exc.acknowledged ? 'Yes' : 'No',
-      item.buyer,
-      poNumbers, suppliers, dueDates, status,
-      item.action.text,
-      item.action.urgent ? 'Yes' : 'No'
-    ]);
+    const poNumbers = item.isNoPO?'':[ ...new Set(item.poRows.map(r=>r.poNumber))].join('; ');
+    const suppliers = item.isNoPO?'':[ ...new Set(item.poRows.map(r=>r.supplier))].join('; ');
+    const dueDates  = item.isNoPO?'':[ ...new Set(item.poRows.map(r=>r.origDelivery).filter(d=>d&&d!=='00/00/0000'&&d!=='#'))].join('; ');
+    const status    = item.isNoPO?'No PO Found':(item.poRows.every(r=>r.deliveredQty>0)?'Delivered':item.poRows.some(r=>r.deliveredQty>0)?'Partially Delivered':'Not Delivered');
+    rows.push([item.exc.productId,item.exc.description,item.priority,item.exc.acknowledged?'Yes':'No',item.buyer,poNumbers,suppliers,dueDates,status,item.action.text,item.action.urgent?'Yes':'No']);
   });
-  const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\r\n');
-  const blob = new Blob([csv], {type:'text/csv'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
+  const csv  = rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\r\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
   a.download = 'exception_action_items.csv';
   a.click();
 }
+
+// ─── Error helpers ────────────────────────────────────────────────────────────
+function showError(msg) { const el=document.getElementById('errorBanner'); el.textContent='⚠ '+msg; el.style.display='block'; }
+function hideError()    { document.getElementById('errorBanner').style.display='none'; }
 </script>
 </body>
 </html>
