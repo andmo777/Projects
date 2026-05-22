@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DWE Exception Action Tool</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root {
+    --navy: #1a2744;
+    --navy-light: #253360;
+    --steel: #3d5a8a;
+    --accent: #e8a020;
+    --accent-light: #f5c060;
+    --danger: #c0392b;
+    --danger-bg: #fdf0ef;
+    --warn: #d4700a;
+    --warn-bg: #fef6ec;
+    --ok: #1e7e44;
+    --ok-bg: #edf7f1;
+    --neutral: #4a5568;
+    --neutral-bg: #f0f2f5;
+    --surface: #ffffff;
+    --bg: #f4f6fa;
+    --border: #dde2ec;
+    --text: #1a1f2e;
+    --muted: #6b7590;
+    --font: 'Georgia', 'Times New Roman', serif;
+    --mono: 'Courier New', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--navy);
+    color: #fff;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    height: 64px;
+    border-bottom: 3px solid var(--accent);
+  }
+  .logo-mark {
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: var(--accent);
+    font-family: var(--mono);
+  }
+  header h1 {
+    font-size: 16px;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+    color: #c8d4ea;
+  }
+  .header-sep { flex: 1; }
+  .header-badge {
+    font-size: 11px;
+    font-family: var(--mono);
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #a0b0c8;
+    padding: 4px 10px;
+    border-radius: 3px;
+    letter-spacing: 1px;
+  }
+
+  /* ── Main layout ── */
+  main { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+
+  /* ── Upload panel ── */
+  .upload-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+  .upload-panel h2 {
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-weight: normal;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .upload-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: 5px;
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+  }
+  .upload-zone:hover, .upload-zone.drag-over {
+    border-color: var(--steel);
+    background: #f0f4fb;
+  }
+  .upload-zone.loaded {
+    border-color: var(--ok);
+    border-style: solid;
+    background: var(--ok-bg);
+  }
+  .upload-zone input[type=file] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+  }
+  .upload-icon {
+    font-size: 28px;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  .upload-label {
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--navy);
+    margin-bottom: 4px;
+    font-family: var(--mono);
+    letter-spacing: 0.5px;
+  }
+  .upload-sub {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: var(--mono);
+  }
+  .upload-status {
+    font-size: 12px;
+    margin-top: 8px;
+    font-family: var(--mono);
+    color: var(--ok);
+    font-weight: bold;
+  }
+
+  .run-btn {
+    margin-top: 1.5rem;
+    width: 100%;
+    padding: 14px;
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    letter-spacing: 2px;
+    font-family: var(--mono);
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background 0.2s;
+    border-bottom: 3px solid var(--accent);
+  }
+  .run-btn:hover { background: var(--navy-light); }
+  .run-btn:disabled { background: #9aa3b5; border-color: #b8bfcd; cursor: not-allowed; }
+
+  /* ── Summary strip ── */
+  .summary-strip {
+    display: none;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .summary-strip.visible { display: grid; }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 1rem 1.25rem;
+    border-top: 3px solid var(--navy);
+  }
+  .stat-card.danger { border-top-color: var(--danger); }
+  .stat-card.warn { border-top-color: var(--warn); }
+  .stat-card.ok { border-top-color: var(--ok); }
+  .stat-n { font-size: 28px; font-weight: bold; color: var(--text); font-family: var(--mono); }
+  .stat-l { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-family: var(--mono); margin-top: 4px; }
+
+  /* ── Filter bar ── */
+  .filter-bar {
+    display: none;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 0.75rem 1rem;
+  }
+  .filter-bar.visible { display: flex; flex-wrap: wrap; }
+  .filter-label { font-size: 11px; font-family: var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
+  .filter-bar select, .filter-bar input {
+    font-family: var(--mono);
+    font-size: 12px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 5px 8px;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .filter-sep { flex: 1; }
+  .export-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    background: transparent;
+    border: 1px solid var(--steel);
+    color: var(--steel);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .export-btn:hover { background: var(--steel); color: #fff; }
+
+  /* ── Buyer sections ── */
+  .buyer-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
+  .buyer-header {
+    background: var(--navy);
+    color: #fff;
+    padding: 0.9rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    user-select: none;
+  }
+  .buyer-header:hover { background: var(--navy-light); }
+  .buyer-name { font-size: 15px; font-family: var(--mono); letter-spacing: 0.5px; flex: 1; }
+  .buyer-count {
+    font-size: 11px;
+    font-family: var(--mono);
+    background: rgba(255,255,255,0.15);
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+  }
+  .buyer-urgent {
+    font-size: 11px;
+    font-family: var(--mono);
+    background: var(--danger);
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .chevron { font-size: 14px; transition: transform 0.2s; }
+  .buyer-header.collapsed .chevron { transform: rotate(-90deg); }
+  .buyer-body { display: block; }
+  .buyer-body.collapsed { display: none; }
+
+  /* ── Action item rows ── */
+  .action-table { width: 100%; border-collapse: collapse; }
+  .action-table th {
+    text-align: left;
+    font-size: 10.5px;
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    background: #f8f9fc;
+    white-space: nowrap;
+  }
+  .action-table td {
+    padding: 10px 12px;
+    font-size: 12.5px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .action-table tr:last-child td { border-bottom: none; }
+  .action-table tr:hover td { background: #fafbfd; }
+
+  .pri-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-family: var(--mono);
+    font-weight: bold;
+    padding: 2px 7px;
+    border-radius: 3px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .pri-hi { background: #fde8e6; color: var(--danger); }
+  .pri-md { background: #fef3e2; color: var(--warn); }
+  .pri-ack { background: #e8f5ee; color: var(--ok); }
+  .pri-lo { background: var(--neutral-bg); color: var(--neutral); }
+
+  .status-pill {
+    display: inline-block;
+    font-size: 10px;
+    font-family: var(--mono);
+    padding: 2px 7px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  .s-delivered { background: #e8f5ee; color: var(--ok); }
+  .s-partial { background: #fef3e2; color: var(--warn); }
+  .s-notdel { background: #fde8e6; color: var(--danger); }
+  .s-unknown { background: var(--neutral-bg); color: var(--neutral); }
+
+  .action-text {
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .action-text.urgent { color: var(--danger); font-weight: bold; }
+  .action-text.warn { color: var(--warn); }
+
+  .no-po {
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 4px,
+      rgba(180,180,200,0.06) 4px,
+      rgba(180,180,200,0.06) 8px
+    );
+  }
+
+  .prod-id { font-family: var(--mono); font-size: 12px; color: var(--steel); font-weight: bold; }
+  .prod-desc { font-size: 12px; color: var(--text); }
+  .po-num { font-family: var(--mono); font-size: 11px; color: var(--navy); }
+  .po-date { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .supplier { font-family: var(--mono); font-size: 11px; }
+
+  .error-banner {
+    background: var(--danger-bg);
+    border: 1px solid #f5c6c2;
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    font-size: 13px;
+    color: var(--danger);
+    font-family: var(--mono);
+    margin-bottom: 1rem;
+    display: none;
+  }
+
+  /* ── Not-in-PO-report section ── */
+  .missing-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--danger);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+  .missing-header {
+    background: var(--danger-bg);
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+  }
+  .missing-header h3 {
+    font-size: 13px;
+    font-family: var(--mono);
+    color: var(--danger);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+    flex: 1;
+  }
+
+  @media print {
+    .upload-panel, .filter-bar, .run-btn, .export-btn { display: none !important; }
+    .buyer-body.collapsed { display: block !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="logo-mark">DWE</span>
+  <h1>Exception Report — Action Item Generator</h1>
+  <span class="header-sep"></span>
+  <span class="header-badge">PROCUREMENT REVIEW</span>
+</header>
+
+<main>
+
+  <div class="error-banner" id="errorBanner"></div>
+
+  <!-- Upload Panel -->
+  <div class="upload-panel">
+    <h2>// Upload Reports</h2>
+    <div class="upload-grid">
+      <div class="upload-zone" id="excZone">
+        <input type="file" id="excFile" accept=".xlsx,.xls" onchange="handleExcFile(this)">
+        <span class="upload-icon">📋</span>
+        <div class="upload-label">Exception Report</div>
+        <div class="upload-sub">List of Exceptions by Product (.xlsx)</div>
+        <div class="upload-status" id="excStatus"></div>
+      </div>
+      <div class="upload-zone" id="poZone">
+        <input type="file" id="poFile" accept=".csv,.xlsx" onchange="handlePOFile(this)">
+        <span class="upload-icon">📦</span>
+        <div class="upload-label">PO / Analytical Workbook</div>
+        <div class="upload-sub">SAP Analytics Report or Analytical Workbook (.csv / .xlsx)</div>
+        <div class="upload-status" id="poStatus"></div>
+      </div>
+    </div>
+    <button class="run-btn" id="runBtn" onclick="runAnalysis()" disabled>
+      ▶ &nbsp; Generate Action Items
+    </button>
+  </div>
+
+  <!-- Summary strip -->
+  <div class="summary-strip" id="summaryStrip">
+    <div class="stat-card danger"><div class="stat-n" id="s-urgent">—</div><div class="stat-l">Urgent / Past Due</div></div>
+    <div class="stat-card warn"><div class="stat-n" id="s-high">—</div><div class="stat-l">High Priority Open</div></div>
+    <div class="stat-card"><div class="stat-n" id="s-nopo">—</div><div class="stat-l">No PO Found</div></div>
+    <div class="stat-card ok"><div class="stat-n" id="s-buyers">—</div><div class="stat-l">Buyers Assigned</div></div>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="filter-bar" id="filterBar">
+    <span class="filter-label">Filter:</span>
+    <select id="filterBuyer" onchange="applyFilters()">
+      <option value="">All Buyers</option>
+    </select>
+    <select id="filterPriority" onchange="applyFilters()">
+      <option value="">All Priorities</option>
+      <option value="HIGH">High</option>
+      <option value="MEDIUM">Medium</option>
+      <option value="ACK">Acknowledged</option>
+    </select>
+    <select id="filterStatus" onchange="applyFilters()">
+      <option value="">All Delivery Statuses</option>
+      <option value="urgent">Past Due / Urgent</option>
+      <option value="notdelivered">Not Delivered</option>
+      <option value="delivered">Delivered</option>
+      <option value="nopo">No PO Found</option>
+    </select>
+    <span class="filter-sep"></span>
+    <button class="export-btn" onclick="exportCSV()">⬇ Export CSV</button>
+    <button class="export-btn" onclick="window.print()">⎙ Print</button>
+  </div>
+
+  <!-- Results -->
+  <div id="results"></div>
+
+</main>
+
+<script>
+// ─── State ───────────────────────────────────────────────────────────────────
+let excData = null;   // [{acknowledged, productId, description, highPri, medPri}]
+let poData  = null;   // [{productId, poNumber, supplier, description, creationDate, originalDeliveryDate, deliveryStatus, cancelStatus, orderedQty, deliveredQty, confirmedDeliveryDate, buyer, buyerCode, poStatus}]
+let analysisResult = null;
+
+// ─── Drag & Drop ─────────────────────────────────────────────────────────────
+['excZone','poZone'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('dragover', e => { e.preventDefault(); el.classList.add('drag-over'); });
+  el.addEventListener('dragleave', () => el.classList.remove('drag-over'));
+  el.addEventListener('drop', e => {
+    e.preventDefault(); el.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+    if (id === 'excZone') { document.getElementById('excFile').files = e.dataTransfer.files; handleExcFile({files: e.dataTransfer.files}); }
+    else { document.getElementById('poFile').files = e.dataTransfer.files; handlePOFile({files: e.dataTransfer.files}); }
+  });
+});
+
+// ─── File Handlers ────────────────────────────────────────────────────────────
+function handleExcFile(input) {
+  const file = input.files ? input.files[0] : null;
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const wb = XLSX.read(e.target.result, {type:'array'});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
+      // Find header row containing "Product ID"
+      let hIdx = rows.findIndex(r => r.some(c => String(c).includes('Product ID')));
+      if (hIdx < 0) throw new Error('Could not find "Product ID" header row in exceptions file.');
+      const headers = rows[hIdx];
+      const ackCol = headers.findIndex(h => String(h).toLowerCase().includes('acknowledged'));
+      const pidCol = headers.findIndex(h => String(h).includes('Product ID'));
+      const descCol = headers.findIndex(h => String(h).toLowerCase().includes('description'));
+      const hiCol  = headers.findIndex(h => String(h).toLowerCase().includes('high'));
+      const mdCol  = headers.findIndex(h => String(h).toLowerCase().includes('medium'));
+      const grpCol = headers.findIndex(h => String(h).toLowerCase().includes('planning group'));
+
+      excData = [];
+      for (let i = hIdx+1; i < rows.length; i++) {
+        const r = rows[i];
+        const pid = String(r[pidCol] || '').trim().replace(/\.0$/,'');
+        if (!pid || isNaN(Number(pid))) continue;
+        excData.push({
+          acknowledged: Number(r[ackCol]) === 1,
+          productId: pid,
+          description: String(r[descCol] || '').trim(),
+          planningGroup: grpCol >= 0 ? String(r[grpCol] || '').trim() : '',
+          highPri: Number(r[hiCol]) === 1,
+          medPri:  Number(r[mdCol]) === 1,
+        });
+      }
+      document.getElementById('excStatus').textContent = `✓ ${excData.length} exceptions loaded`;
+      document.getElementById('excZone').classList.add('loaded');
+      checkReady();
+    } catch(err) {
+      showError('Exception file error: ' + err.message);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function handlePOFile(input) {
+  const file = input.files ? input.files[0] : null;
+  if (!file) return;
+  const ext = file.name.split('.').pop().toLowerCase();
+  if (ext === 'csv') {
+    Papa.parse(file, {
+      skipEmptyLines: true,
+      complete: r => { try { parsePOData(r.data); } catch(e) { showError('PO file error: ' + e.message); } }
+    });
+  } else {
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const wb = XLSX.read(e.target.result, {type:'array'});
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
+        parsePOData(rows);
+      } catch(e) { showError('PO file error: ' + e.message); }
+    };
+    reader.readAsArrayBuffer(file);
+  }
+}
+
+function parsePOData(rows) {
+  if (!rows || rows.length < 2) throw new Error('PO file appears empty.');
+  const headers = rows[0].map(h => String(h).trim());
+
+  // Detect format: "Analytical Workbook" style (coded headers) vs "SAP Analytics" style (friendly headers)
+  const isAnalytical = headers.includes('LIFE_CYCLE_STCD') || headers.includes('PROD_UUID');
+
+  let colMap = {};
+  if (isAnalytical) {
+    // Row 1 is a label row — skip it, use coded header names
+    colMap = {
+      productId:    headers.indexOf('PROD_UUID'),
+      poNumber:     headers.indexOf('PURCHASE_ORDER_UUID'),
+      supplier:     headers.indexOf('SELLER_UUID'),
+      description:  headers.indexOf('ITEM_DESCRIPTION'),
+      creationDate: headers.indexOf('CREATION_DATE'),
+      origDelivery: headers.findIndex(h => h === '/1AN/AB3932C37261FE2'),
+      delivStatus:  headers.indexOf('ITEM_DELIVERY_STCD'),
+      cancelStatus: headers.indexOf('ITEM_CANCELLATION_STCD'),
+      poStatus:     headers.indexOf('LIFE_CYCLE_STCD'),
+      orderedQty:   headers.indexOf('QUANTITY'),
+      deliveredQty: headers.indexOf('BU_TOTAL_DELIVERED_QUANTITY'),
+      confirmDate:  headers.indexOf('CID_DELIVERY_START_DATE'),
+      buyerCode:    headers.indexOf('EMPLOYEE_RESPONSIBLE_UUID'),
+      // Buyer name is in the column AFTER EMPLOYEE_RESPONSIBLE_UUID
+      buyerName:    headers.indexOf('EMPLOYEE_RESPONSIBLE_UUID') + 1,
+    };
+    // Skip the first data row (label row = row index 1)
+    poData = [];
+    for (let i = 2; i < rows.length; i++) {
+      const r = rows[i];
+      const pid = String(r[colMap.productId] || '').trim().replace(/\.0$/,'');
+      if (!pid || pid === 'UUID' || pid === 'PROD_UUID') continue;
+      poData.push(buildPORow(r, colMap, true));
+    }
+  } else {
+    // SAP Analytics style — friendly headers directly
+    colMap = {
+      productId:    headers.findIndex(h => h === 'Product ID'),
+      poNumber:     headers.findIndex(h => h.includes('Purchase Order ID') && !h.includes('Item')),
+      supplier:     headers.indexOf('Supplier'),
+      description:  headers.findIndex(h => h.includes('Item Description')),
+      creationDate: headers.findIndex(h => h.includes('Creation Date')),
+      origDelivery: headers.findIndex(h => h.includes('Original Delivery')),
+      delivStatus:  headers.indexOf('Delivery Status'),
+      cancelStatus: headers.findIndex(h => h.includes('Cancellation')),
+      poStatus:     headers.indexOf('Purchase Order Status'),
+      orderedQty:   headers.findIndex(h => h.includes('Ordered Quantity')),
+      deliveredQty: headers.findIndex(h => h.includes('Delivered Quantity') && h.includes('Base Unit')),
+      confirmDate:  headers.findIndex(h => h.includes('Confirmed') && h.includes('Date')),
+      buyerName:    headers.findIndex(h => h.includes('Buyer')),
+      buyerCode:    -1,
+    };
+    poData = [];
+    for (let i = 1; i < rows.length; i++) {
+      const r = rows[i];
+      const pid = String(r[colMap.productId] || '').trim().replace(/\.0$/,'');
+      if (!pid || isNaN(Number(pid))) continue;
+      poData.push(buildPORow(r, colMap, false));
+    }
+  }
+
+  document.getElementById('poStatus').textContent = `✓ ${poData.length} PO lines loaded`;
+  document.getElementById('poZone').classList.add('loaded');
+  checkReady();
+}
+
+function buildPORow(r, c, coded) {
+  const get = i => i >= 0 ? String(r[i] || '').trim() : '';
+  const STATUS_MAP = {'5':'Sent','6':'Sent','2':'Sent','7':'In Approval','9':'Finished','10':'Acknowledgement Received','11':'Follow-Up Doc Created'};
+  const DELIV_MAP  = {'1':'Delivered','2':'Not Delivered','3':'Partially Delivered'};
+  const CANCEL_MAP = {'1':'Not Canceled','2':'Canceled'};
+
+  let poStatus     = get(c.poStatus);
+  let delivStatus  = get(c.delivStatus);
+  let cancelStatus = get(c.cancelStatus);
+
+  if (coded) {
+    poStatus     = STATUS_MAP[poStatus]     || poStatus;
+    delivStatus  = DELIV_MAP[delivStatus]   || delivStatus;
+    cancelStatus = CANCEL_MAP[cancelStatus] || cancelStatus;
+  }
+
+  const ordQty  = parseFloat(String(r[c.orderedQty]  || '0').replace(/[^\d.]/g,'')) || 0;
+  const delQty  = parseFloat(String(r[c.deliveredQty]|| '0').replace(/[^\d.]/g,'')) || 0;
+  const origDel = get(c.origDelivery);
+  const confirmDel = get(c.confirmDate);
+
+  return {
+    productId:    get(c.productId).replace(/\.0$/,''),
+    poNumber:     get(c.poNumber).replace(/\.0$/,''),
+    supplier:     get(c.supplier).replace(/\.0$/,''),
+    description:  get(c.description),
+    creationDate: get(c.creationDate),
+    origDelivery: origDel,
+    delivStatus,
+    cancelStatus,
+    poStatus,
+    orderedQty:   ordQty,
+    deliveredQty: delQty,
+    confirmDate:  confirmDel,
+    buyer:        get(c.buyerName),
+    buyerCode:    c.buyerCode >= 0 ? get(c.buyerCode) : '',
+  };
+}
+
+function checkReady() {
+  document.getElementById('runBtn').disabled = !(excData && poData);
+}
+
+// ─── Analysis ─────────────────────────────────────────────────────────────────
+function runAnalysis() {
+  hideError();
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  // Index PO data by product ID
+  const poByProduct = {};
+  poData.forEach(row => {
+    if (!poByProduct[row.productId]) poByProduct[row.productId] = [];
+    poByProduct[row.productId].push(row);
+  });
+
+  const items = excData.map(exc => {
+    const poRows = poByProduct[exc.productId] || [];
+    const priority = exc.highPri ? 'HIGH' : exc.medPri ? 'MEDIUM' : 'ACK';
+
+    if (poRows.length === 0) {
+      return { exc, poRows: [], priority, buyer: 'No PO Found', buyerCode: '', urgency: exc.highPri ? 3 : exc.medPri ? 2 : 1, action: buildAction(exc, [], today), isNoPO: true };
+    }
+
+    // Determine buyer from PO rows (most common non-empty)
+    const buyers = poRows.map(r => r.buyer).filter(Boolean);
+    const buyerCounts = {};
+    buyers.forEach(b => buyerCounts[b] = (buyerCounts[b]||0)+1);
+    const buyer = Object.entries(buyerCounts).sort((a,b)=>b[1]-a[1])[0]?.[0] || 'Unknown';
+    const buyerCode = poRows.find(r => r.buyer === buyer)?.buyerCode || '';
+
+    const action = buildAction(exc, poRows, today);
+    const urgency = action.urgent ? 4 : exc.highPri ? 3 : exc.medPri ? 2 : 1;
+
+    return { exc, poRows, priority, buyer, buyerCode, urgency, action, isNoPO: false };
+  });
+
+  analysisResult = items;
+
+  // Build buyer list for filter
+  const buyers = [...new Set(items.filter(i=>!i.isNoPO).map(i=>i.buyer))].sort();
+  const buyerSel = document.getElementById('filterBuyer');
+  buyerSel.innerHTML = '<option value="">All Buyers</option>';
+  buyers.forEach(b => { const o = document.createElement('option'); o.value = b; o.textContent = b; buyerSel.appendChild(o); });
+
+  // Stats
+  const urgent = items.filter(i => i.action.urgent).length;
+  const highOpen = items.filter(i => i.exc.highPri && !i.isNoPO && i.poRows.some(r => r.delivStatus !== 'Delivered')).length;
+  const noPO = items.filter(i => i.isNoPO).length;
+  const uniqueBuyers = buyers.length;
+
+  document.getElementById('s-urgent').textContent = urgent;
+  document.getElementById('s-high').textContent = highOpen;
+  document.getElementById('s-nopo').textContent = noPO;
+  document.getElementById('s-buyers').textContent = uniqueBuyers;
+
+  document.getElementById('summaryStrip').classList.add('visible');
+  document.getElementById('filterBar').classList.add('visible');
+
+  renderResults(items);
+}
+
+function parseDate(str) {
+  if (!str || str === '00/00/0000' || str === '#' || str.trim() === '') return null;
+  const d = new Date(str);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function isPastDue(dateStr, today) {
+  const d = parseDate(dateStr);
+  if (!d) return false;
+  d.setHours(0,0,0,0);
+  return d < today;
+}
+
+function isDueToday(dateStr, today) {
+  const d = parseDate(dateStr);
+  if (!d) return false;
+  d.setHours(0,0,0,0);
+  return d.getTime() === today.getTime();
+}
+
+function dueSoon(dateStr, today, days=7) {
+  const d = parseDate(dateStr);
+  if (!d) return false;
+  d.setHours(0,0,0,0);
+  const diff = (d - today) / 86400000;
+  return diff >= 0 && diff <= days;
+}
+
+function buildAction(exc, poRows, today) {
+  let urgent = false;
+  let lines = [];
+
+  if (poRows.length === 0) {
+    if (exc.description.includes('*DSC*')) {
+      lines.push('Discontinued item — no PO expected. Confirm on-hand stock covers any remaining demand; close exception if satisfied.');
+    } else if (exc.description.includes('*SPC*')) {
+      urgent = true;
+      lines.push('URGENT: Special item with no PO found. Escalate to buyer immediately — SPC forgings/parts carry extreme lead times. Initiate procurement without delay.');
+    } else {
+      if (exc.highPri) urgent = true;
+      lines.push('No PO found in PO report. Verify in SAP whether a PO exists under a different report scope or project/WO-based PO. If no supply action has been taken, raise a purchase requisition immediately.');
+    }
+    return { text: lines.join(' '), urgent };
+  }
+
+  const delivered = poRows.filter(r => r.deliveredQty > 0);
+  const notDelivered = poRows.filter(r => r.deliveredQty === 0 && r.cancelStatus !== 'Canceled');
+  const pastDue = notDelivered.filter(r => isPastDue(r.origDelivery, today));
+  const dueToday = notDelivered.filter(r => isDueToday(r.origDelivery, today));
+  const dueSoonRows = notDelivered.filter(r => dueSoon(r.origDelivery, today, 7) && !isDueToday(r.origDelivery, today));
+  const inApproval = notDelivered.filter(r => r.poStatus === 'In Approval');
+  const longLead = notDelivered.filter(r => { const d = parseDate(r.origDelivery); if (!d) return false; return (d - today) / 86400000 > 60; });
+
+  if (pastDue.length > 0) {
+    urgent = true;
+    const pos = pastDue.map(r=>`PO ${r.poNumber}`).join(', ');
+    lines.push(`PAST DUE: ${pos} — contact supplier immediately for status and revised delivery date.`);
+  }
+  if (dueToday.length > 0) {
+    urgent = true;
+    const pos = dueToday.map(r=>`PO ${r.poNumber}`).join(', ');
+    lines.push(`DUE TODAY: Confirm shipment/delivery for ${pos} and post goods receipt upon arrival.`);
+  }
+  if (inApproval.length > 0 && (pastDue.length > 0 || dueToday.length > 0)) {
+    urgent = true;
+    const pos = inApproval.map(r=>`PO ${r.poNumber}`).join(', ');
+    lines.push(`${pos} is still "In Approval" — confirm PO has been released to supplier.`);
+  } else if (inApproval.length > 0) {
+    const pos = inApproval.map(r=>`PO ${r.poNumber}`).join(', ');
+    lines.push(`${pos} is still "In Approval" — confirm PO has been released to supplier before delivery date.`);
+  }
+  if (delivered.length > 0 && notDelivered.length === 0) {
+    lines.push('All ordered quantity has been received. Verify goods receipt is posted in SAP, confirm on-hand stock meets demand, then acknowledge and close this exception.');
+  } else if (delivered.length > 0) {
+    const total = delivered.reduce((s,r)=>s+r.deliveredQty,0);
+    lines.push(`Partial delivery on file (${fmt(total)} received). Confirm GR is posted. ${notDelivered.length} PO line(s) remain open.`);
+  }
+  if (dueSoonRows.length > 0) {
+    const pos = dueSoonRows.map(r=>`PO ${r.poNumber} (due ${r.origDelivery})`).join('; ');
+    lines.push(`Delivery due within the week — monitor closely: ${pos}.`);
+  }
+  if (longLead.length > 0 && pastDue.length === 0 && dueToday.length === 0) {
+    const pos = longLead.map(r=>`PO ${r.poNumber} (due ${r.origDelivery})`).join('; ');
+    lines.push(`Long lead time item(s): ${pos}. Verify production schedule can absorb the delivery timeline; escalate to supplier if needed.`);
+  }
+  if (exc.acknowledged && lines.length === 0) {
+    lines.push('Exception acknowledged. PO is in progress — monitor for on-time delivery and post GR upon receipt.');
+  }
+  if (lines.length === 0) {
+    lines.push('PO is open and in progress. Verify delivery timeline aligns with production schedule; acknowledge exception once material is received.');
+  }
+
+  return { text: lines.join(' '), urgent };
+}
+
+function fmt(n) {
+  return Number.isInteger(n) ? String(n) : n.toFixed(2).replace(/\.?0+$/,'');
+}
+
+// ─── Render ───────────────────────────────────────────────────────────────────
+function renderResults(items) {
+  const priority = document.getElementById('filterPriority').value;
+  const buyerFilter = document.getElementById('filterBuyer').value;
+  const statusFilter = document.getElementById('filterStatus').value;
+
+  let filtered = items.filter(item => {
+    if (priority === 'HIGH'   && !item.exc.highPri) return false;
+    if (priority === 'MEDIUM' && !item.exc.medPri)  return false;
+    if (priority === 'ACK'    && (!item.exc.acknowledged && item.exc.highPri || !item.exc.acknowledged && item.exc.medPri || !item.exc.acknowledged)) return false;
+    if (buyerFilter && item.buyer !== buyerFilter) return false;
+    if (statusFilter === 'urgent'       && !item.action.urgent) return false;
+    if (statusFilter === 'nopo'         && !item.isNoPO) return false;
+    if (statusFilter === 'notdelivered' && (item.isNoPO || !item.poRows.some(r=>r.delivStatus === 'Not Delivered' || r.delivStatus === 'Partially Delivered'))) return false;
+    if (statusFilter === 'delivered'    && (item.isNoPO || !item.poRows.some(r=>r.deliveredQty>0))) return false;
+    return true;
+  });
+
+  // Separate no-PO items
+  const noPOItems = filtered.filter(i => i.isNoPO).sort((a,b) => b.urgency - a.urgency);
+  const poItems   = filtered.filter(i => !i.isNoPO);
+
+  // Group by buyer
+  const byBuyer = {};
+  poItems.forEach(item => {
+    if (!byBuyer[item.buyer]) byBuyer[item.buyer] = [];
+    byBuyer[item.buyer].push(item);
+  });
+  // Sort buyers: urgent first, then alphabetical
+  const sortedBuyers = Object.entries(byBuyer).sort((a,b) => {
+    const aUrgent = a[1].some(i=>i.action.urgent) ? 1 : 0;
+    const bUrgent = b[1].some(i=>i.action.urgent) ? 1 : 0;
+    if (bUrgent !== aUrgent) return bUrgent - aUrgent;
+    return a[0].localeCompare(b[0]);
+  });
+
+  let html = '';
+
+  // No-PO section first
+  if (noPOItems.length > 0) {
+    html += `<div class="missing-section">
+      <div class="missing-header" onclick="toggleSection(this)">
+        <h3>⚠ No PO Found in Report (${noPOItems.length} items)</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="buyer-body">
+        <table class="action-table">
+          <thead><tr>
+            <th style="width:100px">Product ID</th>
+            <th>Description</th>
+            <th style="width:75px">Priority</th>
+            <th style="width:65px">Ack'd</th>
+            <th>Action Required</th>
+          </tr></thead>
+          <tbody>`;
+    noPOItems.forEach(item => {
+      html += `<tr class="no-po">
+        <td><span class="prod-id">${item.exc.productId}</span></td>
+        <td><span class="prod-desc">${esc(item.exc.description)}</span></td>
+        <td>${priBadge(item.priority)}</td>
+        <td style="text-align:center">${item.exc.acknowledged ? '✓' : '—'}</td>
+        <td><span class="action-text ${item.action.urgent?'urgent':''}">${esc(item.action.text)}</span></td>
+      </tr>`;
+    });
+    html += `</tbody></table></div></div>`;
+  }
+
+  // Buyer sections
+  sortedBuyers.forEach(([buyer, buyerItems]) => {
+    const urgentCount = buyerItems.filter(i=>i.action.urgent).length;
+    buyerItems.sort((a,b) => b.urgency - a.urgency);
+
+    html += `<div class="buyer-section">
+      <div class="buyer-header" onclick="toggleSection(this)">
+        <span class="buyer-name">${esc(buyer)}</span>
+        <span class="buyer-count">${buyerItems.length} item${buyerItems.length!==1?'s':''}</span>
+        ${urgentCount>0?`<span class="buyer-urgent">⚠ ${urgentCount} urgent</span>`:''}
+        <span class="chevron">▼</span>
+      </div>
+      <div class="buyer-body">
+        <table class="action-table">
+          <thead><tr>
+            <th style="width:100px">Product ID</th>
+            <th style="width:200px">Description</th>
+            <th style="width:75px">Priority</th>
+            <th style="width:90px">PO Number(s)</th>
+            <th style="width:80px">Supplier</th>
+            <th style="width:95px">Due Date</th>
+            <th style="width:110px">Delivery Status</th>
+            <th>Action Required</th>
+          </tr></thead>
+          <tbody>`;
+
+    buyerItems.forEach(item => {
+      const poNumbers = [...new Set(item.poRows.map(r=>r.poNumber))].slice(0,3).join(', ') + (item.poRows.length>3?'…':'');
+      const suppliers = [...new Set(item.poRows.map(r=>r.supplier))].slice(0,2).join(', ');
+      const dueDates  = [...new Set(item.poRows.map(r=>r.origDelivery).filter(d=>d&&d!=='00/00/0000'&&d!=='#'))].slice(0,2).join('; ');
+      const delivStatuses = [...new Set(item.poRows.map(r=>r.delivStatus))];
+      const hasDelivered  = item.poRows.some(r=>r.deliveredQty>0);
+      const allDelivered  = item.poRows.every(r=>r.deliveredQty>0);
+      const mainStatus = allDelivered ? 'Delivered' : hasDelivered ? 'Partially Delivered' : (delivStatuses[0]||'');
+
+      html += `<tr>
+        <td><span class="prod-id">${item.exc.productId}</span></td>
+        <td><span class="prod-desc">${esc(item.exc.description)}</span></td>
+        <td>${priBadge(item.priority)}</td>
+        <td><span class="po-num">${esc(poNumbers)}</span></td>
+        <td><span class="supplier">${esc(suppliers)}</span></td>
+        <td><span class="po-date">${esc(dueDates)}</span></td>
+        <td>${delivBadge(mainStatus)}</td>
+        <td><span class="action-text ${item.action.urgent?'urgent':item.exc.highPri?'warn':''}">${esc(item.action.text)}</span></td>
+      </tr>`;
+    });
+
+    html += `</tbody></table></div></div>`;
+  });
+
+  if (html === '') html = '<p style="text-align:center;color:var(--muted);font-family:var(--mono);padding:3rem">No results match the current filters.</p>';
+  document.getElementById('results').innerHTML = html;
+}
+
+function applyFilters() { if (analysisResult) renderResults(analysisResult); }
+
+function toggleSection(header) {
+  header.classList.toggle('collapsed');
+  const body = header.nextElementSibling;
+  body.classList.toggle('collapsed');
+}
+
+function priBadge(pri) {
+  const map = { HIGH:'hi', MEDIUM:'md', ACK:'ack' };
+  return `<span class="pri-badge pri-${map[pri]||'lo'}">${pri}</span>`;
+}
+
+function delivBadge(status) {
+  const map = { 'Delivered':'delivered', 'Partially Delivered':'partial', 'Not Delivered':'notdel' };
+  const cls = map[status] || 'unknown';
+  return `<span class="status-pill s-${cls}">${status||'—'}</span>`;
+}
+
+function esc(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorBanner');
+  el.textContent = '⚠ ' + msg;
+  el.style.display = 'block';
+}
+function hideError() {
+  document.getElementById('errorBanner').style.display = 'none';
+}
+
+// ─── Export CSV ───────────────────────────────────────────────────────────────
+function exportCSV() {
+  if (!analysisResult) return;
+  const rows = [['Product ID','Description','Priority','Acknowledged','Buyer','PO Number(s)','Supplier(s)','Due Date(s)','Delivery Status','Action Required','Urgent']];
+  analysisResult.forEach(item => {
+    const poNumbers = item.isNoPO ? '' : [...new Set(item.poRows.map(r=>r.poNumber))].join('; ');
+    const suppliers = item.isNoPO ? '' : [...new Set(item.poRows.map(r=>r.supplier))].join('; ');
+    const dueDates  = item.isNoPO ? '' : [...new Set(item.poRows.map(r=>r.origDelivery).filter(d=>d&&d!=='00/00/0000'&&d!=='#'))].join('; ');
+    const status    = item.isNoPO ? 'No PO Found' : (item.poRows.every(r=>r.deliveredQty>0)?'Delivered':item.poRows.some(r=>r.deliveredQty>0)?'Partially Delivered':'Not Delivered');
+    rows.push([
+      item.exc.productId,
+      item.exc.description,
+      item.priority,
+      item.exc.acknowledged ? 'Yes' : 'No',
+      item.buyer,
+      poNumbers, suppliers, dueDates, status,
+      item.action.text,
+      item.action.urgent ? 'Yes' : 'No'
+    ]);
+  });
+  const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\r\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'exception_action_items.csv';
+  a.click();
+}
+</script>
+</body>
+</html>
